@@ -35,3 +35,4 @@ demo_ecto_form-*.tar
 npm-debug.log
 /assets/node_modules/
 
+mix.lock

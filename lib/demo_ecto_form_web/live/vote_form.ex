@@ -5,13 +5,26 @@ defmodule DemoEctoFormWeb.VoteForm do
 
   import Ecto.Changeset
 
-  def mount(_params, _session, socket) do
-    changeset =
-      Vote.changeset(%DemoEctoForm.Vote{})
+  def mount(%{"user" => user} = _params, _session, socket) do
+    changeset =  Ets.get_state(user)
 
+    socket =
+      socket
+      |> assign(changeset: changeset)
+      |> assign(user: user)
 
-    {:ok, assign(socket, changeset: changeset)}
+    {:ok, socket}
   end
+
+  def mount(_params, _session, socket) do
+    socket =
+      socket
+      |> assign(changeset: Vote.changeset(%Vote{}))
+      |> assign(user: nil)
+
+    {:ok, socket}
+  end
+
 
   def handle_event("validate", %{"vote" => vote_params}, socket) do
     changeset =
@@ -19,6 +32,11 @@ defmodule DemoEctoFormWeb.VoteForm do
        |> Map.put(:action, :validate)
 
     IO.inspect(changeset)
+
+    if socket.assigns.user != nil do
+      Ets.set_state(socket.assigns.user, changeset)
+      IO.puts "saved state for #{inspect(socket.assigns.user)}"
+    end
 
     {:noreply, assign(socket, changeset: changeset)}
   end
@@ -37,6 +55,10 @@ defmodule DemoEctoFormWeb.VoteForm do
       IO.puts "Vote data: #{inspect(data, [pretty: true, struct: false])}"
       Ets.add_vote(data)
 
+      if socket.assigns.user != nil do
+        Ets.remove_state(socket.assigns.user)
+      end
+
       socket =
         socket
         |> put_flash(:info, "You voted for #{data.vote_for}!")
@@ -48,17 +70,34 @@ defmodule DemoEctoFormWeb.VoteForm do
     end
   end
 
+  def handle_event("recover_form", %{"user" => user} = _params, socket) do
+    changeset =  Ets.get_state(user)
+
+    socket =
+      socket
+      |> assign(changeset: changeset)
+      |> assign(user: user)
+
+    {:noreply, socket}
+  end
+
+  def handle_event("recover_form",  _params, socket) do
+    {:noreply, socket}
+  end
+
   def render(assigns) do
     ~H"""
     <div class="bg-red-600 text-white rounded-md">
     <br>
     <.form
+      id="votes-form"
       :let={f} for={@changeset}
       phx-change="validate"
       phx-submit="submit"
+      phx-auto-recover="recover_form"
       class="flex flex-col max-w-md mx-auto mt-8"
     >
-     <h1 class="text-4xl font-bold text-center">Make Elixir Great NOW!</h1>
+     <h1 class="text-4xl font-bold text-center" phx-click="crash_me">Make Elixir Great NOW!</h1>
      <br>
       <.input field={f[:name]} placeholder="Nguyen Van A" id="votes-name" label="Full Name" />
       <br>

@@ -1,18 +1,18 @@
 # DemoEctoForm
 
+This is a demo for sharing session in Elixir Saigon.
+
+Slide for talk in `slide` folder.
+
 To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Visit [`localhost:4000`](http://localhost:4000) for voting form.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+Visit [`localhost:4000/candidate`](http://localhsot:4000/candidate) for add new candidate.
 
-## Learn more
+Visit [`localhost:4000/result`](http://localhost:4000/result) for voted list.
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+To test recovery form go to voting form with param `user=user...`, add some data to fields then click to title "Make Elixir Great NOW!"

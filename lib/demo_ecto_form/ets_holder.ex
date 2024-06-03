@@ -3,6 +3,9 @@ defmodule DemoEctoForm.Ets do
 
   @votes_table :votes
   @candidates_table :candidates
+  @state_form :state_form
+
+  alias DemoEctoForm.{Vote, Candidate}
 
   ### Public API ###
 
@@ -34,11 +37,26 @@ defmodule DemoEctoForm.Ets do
     Enum.map(candidates, fn {key, _candidate} -> key end)
   end
 
+  def set_state(id, state) do
+    :ets.insert(@state_form, {id, state})
+  end
+
+  def get_state(id) do
+    :ets.lookup_element(@state_form, id, 2, Vote.changeset(%Vote{}))
+  end
+
+  def remove_state(id) do
+    :ets.delete(@state_form, id)
+  end
+
   ### Callbacks ###
 
   def init(_) do
     vote_table =:ets.new(@votes_table, [:named_table, :protected, read_concurrency: true, write_concurrency: true])
     candidate_table =:ets.new(@candidates_table, [:named_table, :protected, read_concurrency: true, write_concurrency: true])
+
+    # for storage of form state to recover from crashes
+    @state_form = :ets.new(@state_form, [:named_table, :public, :set, read_concurrency: true, write_concurrency: true])
 
     {:ok, {vote_table, candidate_table}}
   end

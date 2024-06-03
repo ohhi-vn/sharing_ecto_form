@@ -4,6 +4,8 @@ defmodule DemoEctoForm.Vote do
 
   alias DemoEctoForm.{Ets}
 
+  alias DemoEctoForm.Vote
+
  embedded_schema do
     field :name, :string, default: ""
     field :email, :string
@@ -28,4 +30,17 @@ defmodule DemoEctoForm.Vote do
     |> validate_inclusion(:vote_for, Ets.get_key_candidates())
   end
 
+  def to_map(vote = %Vote{}) do
+    Map.from_struct(vote)
+  end
+
+  def to_tuple(vote = %Vote{}) do
+    {vote.name, vote.email, vote.phone, vote.vote_for, vote.reason}
+  end
+
+  def from_params!(params) do
+    %Vote{}
+    |> changeset(params)
+    |> apply_action!(:update)
+  end
 end

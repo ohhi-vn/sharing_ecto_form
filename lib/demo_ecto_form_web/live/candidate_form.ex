@@ -49,6 +49,7 @@ defmodule DemoEctoFormWeb.CandidateForm do
     <div class="bg-red-600 text-white rounded-md">
     <br>
     <.form
+      id="candidate-form"
       :let={f} for={@changeset}
       phx-change="validate"
       phx-submit="submit"
