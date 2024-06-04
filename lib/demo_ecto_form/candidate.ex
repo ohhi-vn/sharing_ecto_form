@@ -11,6 +11,7 @@ defmodule DemoEctoForm.Candidate do
     candidate
     |> cast(attrs, [:name, :bio])
     |> validate_required([:name])
+    |> update_change(:name, &String.trim/1)
     |> validate_format(:name, ~r/^[a-zA-Z\s]+$/)
     |> validate_format(:name, ~r/^\w+(?:\s+\w+){1,5}$/)
     |> validate_format(:bio, ~r/^\w+(?:\s+\w+){2,25}$/)

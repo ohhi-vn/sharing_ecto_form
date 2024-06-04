@@ -6,8 +6,8 @@ defmodule DemoEctoFormWeb.CandidateForm do
   import Ecto.Changeset
 
   def mount(_params, _session, socket) do
-
     changeset = Candidate.changeset(%Candidate{})
+
     {:ok, assign(socket, changeset: changeset)}
   end
 
@@ -25,8 +25,7 @@ defmodule DemoEctoFormWeb.CandidateForm do
   def handle_event("submit", %{"candidate" => candidate_params}, socket) do
     changeset =
       %Candidate{}
-    |> Candidate.changeset(candidate_params)
-    |> Map.put(:action, :validate)
+      |> Candidate.changeset(candidate_params)
 
     if changeset.valid? do
       data = apply_action!(changeset, :update)
@@ -40,6 +39,10 @@ defmodule DemoEctoFormWeb.CandidateForm do
 
       {:noreply, socket}
     else
+      changeset =
+        %Candidate{}
+        |> Candidate.changeset(candidate_params)
+
       {:noreply, assign(socket, changeset: changeset)}
     end
   end

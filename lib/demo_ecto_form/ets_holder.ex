@@ -5,7 +5,7 @@ defmodule DemoEctoForm.Ets do
   @candidates_table :candidates
   @state_form :state_form
 
-  alias DemoEctoForm.{Vote, Candidate}
+  alias DemoEctoForm.{Vote}
 
   ### Public API ###
 

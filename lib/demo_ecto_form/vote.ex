@@ -18,6 +18,8 @@ defmodule DemoEctoForm.Vote do
     vote
     |> cast(attrs, [:name, :email, :phone, :vote_for, :reason])
     |> validate_required([:name, :email, :vote_for])
+    |> update_change(:name, &String.trim/1)
+    |> update_change(:email, &String.trim/1)
     |> validate_length(:name, min: 5)
     |> validate_length(:reason, min: 10)
     |> validate_length(:phone, min: 10, max: 15)
@@ -28,14 +30,6 @@ defmodule DemoEctoForm.Vote do
     |> validate_format(:email, ~r/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
     |> validate_format(:phone, ~r/(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})/)
     |> validate_inclusion(:vote_for, Ets.get_key_candidates())
-  end
-
-  def to_map(vote = %Vote{}) do
-    Map.from_struct(vote)
-  end
-
-  def to_tuple(vote = %Vote{}) do
-    {vote.name, vote.email, vote.phone, vote.vote_for, vote.reason}
   end
 
   def from_params!(params) do
