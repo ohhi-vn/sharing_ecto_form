@@ -71,19 +71,6 @@ defmodule DemoEctoFormWeb.VoteForm do
     end
   end
 
-  def handle_event("recover_form", %{"user" => user} = _params, socket) do
-    IO.puts "recovering form for #{inspect(user)}"
-
-    changeset =  Ets.get_state(user)
-
-    socket =
-      socket
-      |> assign(changeset: changeset)
-      |> assign(user: user)
-
-    {:noreply, socket}
-  end
-
   def handle_event("recover_form",  _params, socket) do
     IO.puts "recovering form"
     changeset = socket.assigns.changeset
