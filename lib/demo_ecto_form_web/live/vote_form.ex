@@ -12,6 +12,7 @@ defmodule DemoEctoFormWeb.VoteForm do
       socket
       |> assign(changeset: changeset)
       |> assign(user: user)
+      |> assign(recovered: nil)
 
     {:ok, socket}
   end
@@ -71,6 +72,8 @@ defmodule DemoEctoFormWeb.VoteForm do
   end
 
   def handle_event("recover_form", %{"user" => user} = _params, socket) do
+    IO.puts "recovering form for #{inspect(user)}"
+
     changeset =  Ets.get_state(user)
 
     socket =
@@ -82,6 +85,25 @@ defmodule DemoEctoFormWeb.VoteForm do
   end
 
   def handle_event("recover_form",  _params, socket) do
+    IO.puts "recovering form"
+    changeset = socket.assigns.changeset
+
+    invalid_fields = changeset.errors |> Enum.map(fn {field, _} -> field end)
+    IO.inspect(invalid_fields)
+    filtered_correct_fields = Map.drop(changeset.changes, invalid_fields)
+    IO.inspect(filtered_correct_fields)
+
+    changeset =
+      Vote.changeset(%Vote{})
+      |> Map.put(:changes, filtered_correct_fields)
+
+    IO.puts "Recovered changeset: #{inspect(changeset, [pretty: true, struct: false])}"
+
+    socket =
+      socket
+      |> assign(changeset: changeset)
+      |> put_flash(:info, "Recovered form data, please add invalid fields again")
+
     {:noreply, socket}
   end
 

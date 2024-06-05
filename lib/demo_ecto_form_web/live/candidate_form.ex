@@ -58,7 +58,7 @@ defmodule DemoEctoFormWeb.CandidateForm do
       phx-submit="submit"
       class="flex flex-col max-w-md mx-auto mt-8"
     >
-     <h1 class="text-4xl font-bold text-center">Make Elixir Great NOW!</h1>
+     <h1 class="text-4xl font-bold text-center">New Candidate!</h1>
      <br>
       <.input field={f[:name]} placeholder="Nguyen Van Great" id="name" label="Full Name" />
       <br>
